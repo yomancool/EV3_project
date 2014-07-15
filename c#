@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Lego.Ev3.Core;
+using Lego.Ev3.Desktop;
+
+namespace ev3
+{
+    /// <summary>
+    /// MainWindow.xaml 的互動邏輯
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        Brick brick;
+        int forward = 40;
+        int backward = 30;
+        uint time = 300;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+
+            brick = new Brick(new BluetoothCommunication("COM3"));
+            brick.BrickChanged += brick_BrickChanged;
+            await brick.ConnectAsync();
+            //await brick.DirectCommand.StartMotorAsync();
+        }
+
+        void brick_BrickChanged(object sender, BrickChangedEventArgs e)
+        {
+           
+        }
+
+        private async void forward_Button_Click(object sender, RoutedEventArgs e)
+        {
+           await brick.DirectCommand.TurnMotorAtPowerForTimeAsync(OutputPort.B | OutputPort.C,forward,time,false);
+        }
+
+        private async void left_Button_Click(object sender, RoutedEventArgs e)
+        {
+            await brick.DirectCommand.TurnMotorAtPowerForTimeAsync(OutputPort.B | OutputPort.C, forward, time, false);
+        }
+    }
+}
